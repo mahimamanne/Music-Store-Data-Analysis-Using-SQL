@@ -1,4 +1,4 @@
-/*	Question Set 1 - Easy */
+/* Question Set 1 - Easy */
 
 /* Q1: Who is the senior most employee based on job title? */
 
@@ -10,10 +10,10 @@ LIMIT 1
 
 /* Q2: Which countries have the most Invoices? */
 
-SELECT COUNT(*) AS c, billing_country 
+SELECT COUNT(*) AS country_count, billing_country 
 FROM invoice
 GROUP BY billing_country
-ORDER BY c DESC
+ORDER BY country_count DESC
 
 
 /* Q3: What are top 3 values of total invoice? */
@@ -21,6 +21,7 @@ ORDER BY c DESC
 SELECT total 
 FROM invoice
 ORDER BY total DESC
+LIMIT 3
 
 
 /* Q4: Which city has the best customers? We would like to throw a promotional Music Festival in the city we made the most money. 
@@ -89,6 +90,20 @@ JOIN genre ON genre.genre_id = track.genre_id
 WHERE genre.name LIKE 'Rock'
 GROUP BY artist.artist_id
 ORDER BY number_of_songs DESC
+LIMIT 10;
+
+/* Method 2 */
+SELECT COUNT(artist.artist_id) AS track_count, artist.artist_id, artist.name
+FROM artist
+JOIN album ON artist.artist_id = album.artist_id
+JOIN track ON album.album_id = track.album_id
+WHERE track_id IN(
+	SELECT track.track_id FROM track
+	JOIN genre on track.genre_id = genre.genre_id
+	WHERE genre.name LIKE 'ROCK'
+)
+GROUP BY artist.artist_id, artist.artist_name
+ORDER BY track_count DESC
 LIMIT 10;
 
 
@@ -223,8 +238,3 @@ JOIN country_max_spending ms
 ON cc.billing_country = ms.billing_country
 WHERE cc.total_spending = ms.max_spending
 ORDER BY 1;
-
-
-/* source: www.youtube.com/@RishabhMishraOfficial */
-
-/* Thank You :) */
